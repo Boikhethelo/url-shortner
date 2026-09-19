@@ -1,5 +1,10 @@
 package service;
 
+import encoder.Base62Encoder;
+import model.ShortUrl;
+import repository.UrlRepository;
+import validation.UrlValidator;
+
 /**
  * Core business logic: validate, shorten, resolve, and handle the
  * duplicate-submission and collision-retry policies.
@@ -13,4 +18,38 @@ package service;
  */
 
 public class ShortenerService {
+
+    private final UrlRepository repository;
+    private final UrlValidator validator;
+    private final Base62Encoder encoder;
+
+    public ShortenerService(UrlRepository repository, UrlValidator validator, Base62Encoder encoder){
+        this.repository = repository;
+        this.validator = validator;
+        this.encoder = encoder;
+    }
+
+    /**
+     * Validates {@code longUrl}, then either returns an existing short code
+     * for it or mints a new one, depending on the chosen duplicate policy.
+     */
+
+    public ShortUrl shorten(String longUrl) {
+        // TODO:
+        //  1. validator.validate(longUrl)
+        //  2. check repository.findByLongUrl(longUrl) per duplicate policy
+        //  3. repository.save(...) then encoder.encode(id) for the short code
+        //     (or generate+check a random code if using collision-retry mode)
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    /**
+     * @throws ShortCodeNotFoundException if the code has no mapping
+     */
+    public ShortUrl resolve(String shortCode) {
+        // TODO: repository.findByCode(shortCode), increment clicks, or throw
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+
 }
