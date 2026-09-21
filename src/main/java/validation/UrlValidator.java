@@ -1,5 +1,7 @@
 package validation;
 
+import exception.InvalidUrlException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Set;
@@ -25,13 +27,25 @@ public class UrlValidator {
 
     public void validate(String candidate){
 
-        // TODO:
-        //  1. reject null/blank input
-        //  2. parse with URI (catch URISyntaxException -> InvalidUrlException)
-        //  3. reject schemes not in ALLOWED_SCHEMES
-        //  4. reject missing host
+        if(candidate == null || candidate.isBlank()){
+            throw new InvalidUrlException("url cannot be null or blank");
+        }
 
-        throw new UnsupportedOperationException("not implemented");
+        URI parsed;
+
+        try{
+            parsed = parse(candidate);
+        }catch (URISyntaxException e){
+            throw new InvalidUrlException("Malformed URL: ");
+        }
+
+        if(!ALLOWED_SCHEMES.contains(parsed.getScheme())){
+            throw new InvalidUrlException("Unallowed scheme");
+        }
+
+        if (parsed.getHost() == null){
+            throw new InvalidUrlException("No path");
+        }
 
     }
 
