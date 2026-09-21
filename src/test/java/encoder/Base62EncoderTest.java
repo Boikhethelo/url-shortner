@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class Base62EncoderTest {
 
     private final Base62Encoder encoder = new Base62Encoder();
+    private static final String ALPHABET =
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     @Test
     void encodeThenDecode_returnsOriginalId() {
@@ -21,21 +23,25 @@ class Base62EncoderTest {
 
     @Test
     void encode_boundaryValue_zero() {
-        // TODO: assert encode(0) behaves sensibly and decode() round-trips it
+        String code = encoder.encode(0);
+        assertEquals(String.valueOf(ALPHABET.charAt(0)),code);
+        assertEquals(0L,encoder.decode(code));
+
     }
 
     @Test
     void encode_boundaryValue_longMax() {
-        // TODO: assert encode(Long.MAX_VALUE) round-trips via decode()
+        String code = encoder.encode(Long.MAX_VALUE);
+        assertEquals(Long.MAX_VALUE,encoder.decode(code));
     }
 
     @Test
     void encode_negativeId_throws() {
-        // TODO: assertThrows(IllegalArgumentException.class, () -> encoder.encode(-1))
+        assertThrows(IllegalArgumentException.class, () -> encoder.encode(-1));
     }
 
     @Test
     void decode_invalidCharacter_throws() {
-        // TODO: assertThrows(IllegalArgumentException.class, () -> encoder.decode("!!!"))
+        assertThrows(IllegalArgumentException.class, () -> encoder.decode("!!!"));
     }
 }
