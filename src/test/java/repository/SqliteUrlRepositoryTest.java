@@ -1,5 +1,6 @@
 package repository;
 
+import model.ShortUrl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,10 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Instant;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class SqliteUrlRepositoryTest {
 
@@ -26,21 +31,43 @@ class SqliteUrlRepositoryTest {
 
     @Test
     void save_thenFindByCode_returnsSameMapping() {
-        // TODO: repository.save(...), then repository.findByCode(...), assert equality
+        ShortUrl toSave = new ShortUrl(0L, "abc123", "https://example.com", Instant.now(), 0);
+
+        ShortUrl saved = repository.save(toSave);
+        Optional<ShortUrl> found = repository.findByCode("abc123");
+
+        assertTrue(found.isPresent());
+        assertEquals(saved.id(), found.get().id());
+        assertEquals("abc123", found.get().shortCode());
+        assertEquals("https://example.com", found.get().longUrl());
+        assertEquals(0, found.get().clickCount());
     }
 
     @Test
     void findByCode_unknownCode_returnsEmpty() {
-        // TODO: assertTrue(repository.findByCode("missing").isEmpty())
+        assertTrue(repository.findByCode("missing").isEmpty());
     }
 
     @Test
     void save_duplicateShortCode_violatesUniqueConstraint() {
-        // TODO: assert the schema's UNIQUE constraint on short_code is enforced
+        ShortUrl first = new ShortUrl(0L, "dup123", "https://example.com/first", Instant.now(), 0);
+        ShortUrl second = new ShortUrl(0L, "dup123", "https://example.com/second", Instant.now(), 0);
+
+        repository.save(first);
+
+        assertThrows(RuntimeException.class, () -> repository.save(second));
     }
 
     @Test
     void incrementClicks_incrementsStoredCount() {
-        // TODO: save, incrementClicks twice, findByCode, assert clickCount == 2
+        ShortUrl toSave = new ShortUrl(0L, "click1", "https://example.com", Instant.now(), 0);
+        repository.save(toSave);
+
+        repository.incrementClicks("click1");
+        repository.incrementClicks("click1");
+
+        Optional<ShortUrl> found = repository.findByCode("click1");
+        assertTrue(found.isPresent());
+        assertEquals(2, found.get().clickCount());
     }
 }

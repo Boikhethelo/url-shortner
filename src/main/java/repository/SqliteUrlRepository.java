@@ -2,9 +2,8 @@ package repository;
 
 import model.ShortUrl;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.DriverManager;
+import java.sql.*;
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -46,26 +45,100 @@ public class SqliteUrlRepository implements UrlRepository{
 
     @Override
     public ShortUrl save(ShortUrl shortUrl) {
-        // TODO: INSERT via PreparedStatement, return ShortUrl with generated id
-        throw new UnsupportedOperationException("not implemented");
-    }
+        String sql = "INSERT INTO short_urls(short_code, long_url, created_at, click_count) VALUES(?,?,?,?)";
+
+        try(PreparedStatement stmt = getConnection().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)){
+            stmt.setString(1,shortUrl.shortCode());
+            stmt.setString(2, shortUrl.longUrl());
+            stmt.setLong(3,shortUrl.createdAt().toEpochMilli());
+            stmt.setInt(4,(int) (shortUrl.clickCount()));
+            stmt.executeUpdate();
+
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (!generatedKeys.next()) {
+                    throw new SQLException("Insert failed, no generated key obtained for short_code: " + shortUrl.shortCode());
+                }
+                long id = generatedKeys.getLong(1);
+                return new ShortUrl(id, shortUrl.shortCode(), shortUrl.longUrl(), shortUrl.createdAt(), shortUrl.clickCount());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save ShortUrl: " + shortUrl.shortCode(), e);
+        }
+
+        }
+
 
     @Override
     public Optional<ShortUrl> findByCode(String shortCode) {
-        // TODO: SELECT ... WHERE short_code = ?
-        throw new UnsupportedOperationException("not implemented");
+        String sql = "SELECT * FROM short_urls WHERE short_code = ?";
+
+        try(PreparedStatement stmt = getConnection().prepareStatement(sql)){
+            stmt.setString(1,shortCode);
+
+            try(ResultSet results = stmt.executeQuery()) {
+                if (!results.next()) {
+                    return Optional.empty();
+                }
+
+                ShortUrl output = new ShortUrl(
+                        results.getLong("id"),
+                        shortCode,
+                        results.getString("long_url"),
+                        Instant.ofEpochMilli(results.getLong("created_at")),
+                        results.getInt("click_count")
+                );
+
+                return Optional.of(output);
+            }
+
+        }catch (SQLException e){
+            throw new RuntimeException("", e);
+        }
     }
 
     @Override
     public Optional<ShortUrl> findByLongUrl(String longUrl) {
-        // TODO: SELECT ... WHERE long_url = ?
-        throw new UnsupportedOperationException("not implemented");
+
+        String sql = "SELECT * FROM short_urls WHERE long_url = ?";
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, longUrl);
+
+            try (ResultSet results = stmt.executeQuery()) {
+                if (!results.next()) {
+                    return Optional.empty();
+                }
+
+                ShortUrl output = new ShortUrl(
+                        results.getLong("id"),
+                        results.getString("short_code"),
+                        longUrl,
+                        results.getTimestamp("created_at").toInstant(),
+                        results.getInt("click_count")
+                );
+
+                return Optional.of(output);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find ShortUrl by long URL: " + longUrl, e);
+        }
     }
 
     @Override
     public void incrementClicks(String shortCode) {
-        // TODO: UPDATE short_urls SET click_count = click_count + 1 WHERE short_code = ?
-        throw new UnsupportedOperationException("not implemented");
+        String sql = "UPDATE short_urls SET click_count = click_count + 1 WHERE short_code = ?";
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, shortCode);
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new RuntimeException("No ShortUrl found with short code: " + shortCode);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to increment clicks for short code: " + shortCode, e);
+        }
     }
 
 
