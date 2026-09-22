@@ -1,9 +1,13 @@
 package service;
 
 import encoder.Base62Encoder;
+import exception.ShortCodeNotFoundException;
 import model.ShortUrl;
 import repository.UrlRepository;
 import validation.UrlValidator;
+
+import java.time.Instant;
+import java.util.Optional;
 
 /**
  * Core business logic: validate, shorten, resolve, and handle the
@@ -35,12 +39,20 @@ public class ShortenerService {
      */
 
     public ShortUrl shorten(String longUrl) {
-        // TODO:
-        //  1. validator.validate(longUrl)
-        //  2. check repository.findByLongUrl(longUrl) per duplicate policy
-        //  3. repository.save(...) then encoder.encode(id) for the short code
-        //     (or generate+check a random code if using collision-retry mode)
-        throw new UnsupportedOperationException("not implemented");
+        validator.validate(longUrl);
+
+        return repository.findByLongUrl(longUrl)
+                .orElseGet(() -> createNewShortUrl(longUrl));
+    }
+
+    private ShortUrl createNewShortUrl(String longUrl) {
+        ShortUrl toSave = new ShortUrl(0, null, longUrl, Instant.now(), 0);
+        ShortUrl saved = repository.save(toSave);
+
+        String encoded = encoder.encode(saved.id());
+        ShortUrl withCode = new ShortUrl(saved.id(), encoded, longUrl, saved.createdAt(), saved.clickCount());
+
+        return repository.save(withCode);
     }
 
     /**
@@ -48,7 +60,10 @@ public class ShortenerService {
      */
     public ShortUrl resolve(String shortCode) {
         // TODO: repository.findByCode(shortCode), increment clicks, or throw
-        throw new UnsupportedOperationException("not implemented");
+        ShortUrl found = repository.findByCode(shortCode)
+                .orElseThrow(() -> new ShortCodeNotFoundException("No mapping for code: " + shortCode));
+        repository.incrementClicks(shortCode);
+        return new ShortUrl(found.id(), found.shortCode(), found.longUrl(), found.createdAt(), found.clickCount() + 1);
     }
 
 

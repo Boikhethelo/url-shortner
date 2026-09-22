@@ -4,22 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9869d2b3-d985-4f25-be30-f6e8aadfec4a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/encoder/Base62Encoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/encoder/Base62Encoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/encoder/Base62EncoderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/encoder/Base62EncoderTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/app/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controller/UrlController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/encoder/Base62Encoder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/exception/InvalidUrlException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/exception/ShortCodeNotFoundException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/model/ShortUrl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/repository/UrlRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/service/ShortenerService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/validation/UrlValidator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-    </list>
+    <list default="true" id="9869d2b3-d985-4f25-be30-f6e8aadfec4a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,7 +19,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "JUnit.Base62EncoderTest.executor": "Run",
-    "git-widget-placeholder": "main"
+    "git-widget-placeholder": "main",
+    "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>
   <component name="RunManager">

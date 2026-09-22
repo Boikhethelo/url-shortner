@@ -41,7 +41,7 @@ public class Base62Encoder {
      */
 
     public long decode(String code){
-        // TODO: implement base62 decoding, inverse of encode()
+
         if (code == null || code.isEmpty()){
             throw new IllegalArgumentException("code must not be null or empty");
 
