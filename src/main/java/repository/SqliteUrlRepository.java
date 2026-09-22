@@ -23,7 +23,7 @@ public class SqliteUrlRepository implements UrlRepository{
         String ddl = """
                                 CREATE TABLE IF NOT EXISTS short_urls (
                                     id          INTEGER PRIMARY KEY AUTOINCREMENT,
-                                    short_code  TEXT NOT NULL UNIQUE,
+                                    short_code  TEXT UNIQUE,
                                     long_url    TEXT NOT NULL,
                                     created_at  TEXT NOT NULL,
                                     click_count INTEGER NOT NULL DEFAULT 0
@@ -51,7 +51,7 @@ public class SqliteUrlRepository implements UrlRepository{
             stmt.setString(1,shortUrl.shortCode());
             stmt.setString(2, shortUrl.longUrl());
             stmt.setLong(3,shortUrl.createdAt().toEpochMilli());
-            stmt.setInt(4,(int) (shortUrl.clickCount()));
+            stmt.setInt(4,(int) shortUrl.clickCount());
             stmt.executeUpdate();
 
 
@@ -99,7 +99,6 @@ public class SqliteUrlRepository implements UrlRepository{
 
     @Override
     public Optional<ShortUrl> findByLongUrl(String longUrl) {
-
         String sql = "SELECT * FROM short_urls WHERE long_url = ?";
 
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
@@ -114,7 +113,7 @@ public class SqliteUrlRepository implements UrlRepository{
                         results.getLong("id"),
                         results.getString("short_code"),
                         longUrl,
-                        results.getTimestamp("created_at").toInstant(),
+                        Instant.ofEpochMilli(results.getLong("created_at")),
                         results.getInt("click_count")
                 );
 
@@ -138,6 +137,20 @@ public class SqliteUrlRepository implements UrlRepository{
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to increment clicks for short code: " + shortCode, e);
+        }
+    }
+
+    @Override
+    public void updateShortCode(long id, String shortCode) {
+        String sql = "UPDATE short_urls SET short_code = ? WHERE id = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, shortCode);
+            stmt.setLong(2, id);
+            if (stmt.executeUpdate() == 0) {
+                throw new RuntimeException("No row found with id: " + id);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update short code for id: " + id, e);
         }
     }
 

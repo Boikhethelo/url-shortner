@@ -70,4 +70,30 @@ class SqliteUrlRepositoryTest {
         assertTrue(found.isPresent());
         assertEquals(2, found.get().clickCount());
     }
+
+    @Test
+    void findByLongUrl_knownUrl_returnsMapping() {
+        ShortUrl toSave = new ShortUrl(0L, "byurl1", "https://example.com/byurl", Instant.now(), 0);
+        repository.save(toSave);
+
+        Optional<ShortUrl> found = repository.findByLongUrl("https://example.com/byurl");
+
+        assertTrue(found.isPresent());
+        assertEquals("byurl1", found.get().shortCode());
+    }
+
+    @Test
+    void findByLongUrl_unknownUrl_returnsEmpty() {
+        assertTrue(repository.findByLongUrl("https://nope.example.com").isEmpty());
+    }
+
+    @Test
+    void updateShortCode_setsCodeOnExistingRow() {
+        ShortUrl toSave = new ShortUrl(0L, null, "https://example.com/pending", Instant.now(), 0);
+        ShortUrl saved = repository.save(toSave);
+
+        repository.updateShortCode(saved.id(), "newcode1");
+
+        assertTrue(repository.findByCode("newcode1").isPresent());
+    }
 }

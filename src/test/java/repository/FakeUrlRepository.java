@@ -46,4 +46,16 @@ public class FakeUrlRepository implements UrlRepository {
                     existing.longUrl(), existing.createdAt(), existing.clickCount() + 1));
         }
     }
+
+    @Override
+    public void updateShortCode(long id, String shortCode) {
+        byCode.values().stream()
+                .filter(u -> u.id() == id)
+                .findFirst()
+                .ifPresent(existing -> {
+                    byCode.remove(existing.shortCode());
+                    byCode.put(shortCode, new ShortUrl(existing.id(), shortCode,
+                            existing.longUrl(), existing.createdAt(), existing.clickCount()));
+                });
+    }
 }

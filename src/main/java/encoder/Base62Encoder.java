@@ -41,23 +41,19 @@ public class Base62Encoder {
      */
 
     public long decode(String code){
-
         if (code == null || code.isEmpty()){
             throw new IllegalArgumentException("code must not be null or empty");
-
         }
 
         long result = 0;
-        for (int i = 0; 1 < code.length(); i++){
+        for (int i = 0; i < code.length(); i++){
             char c = code.charAt(i);
             int digit = ALPHABET.indexOf(c);
-            if(digit < 0){
+            if (digit < 0){
                 throw new IllegalArgumentException("code contains invalid character: " + c);
             }
-
             result = result * BASE + digit;
         }
-
         return result;
     }
 

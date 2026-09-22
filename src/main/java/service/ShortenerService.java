@@ -7,7 +7,6 @@ import repository.UrlRepository;
 import validation.UrlValidator;
 
 import java.time.Instant;
-import java.util.Optional;
 
 /**
  * Core business logic: validate, shorten, resolve, and handle the
@@ -50,16 +49,16 @@ public class ShortenerService {
         ShortUrl saved = repository.save(toSave);
 
         String encoded = encoder.encode(saved.id());
-        ShortUrl withCode = new ShortUrl(saved.id(), encoded, longUrl, saved.createdAt(), saved.clickCount());
+        repository.updateShortCode(saved.id(), encoded);
 
-        return repository.save(withCode);
+        return new ShortUrl(saved.id(), encoded, longUrl, saved.createdAt(), saved.clickCount());
     }
 
     /**
      * @throws ShortCodeNotFoundException if the code has no mapping
      */
     public ShortUrl resolve(String shortCode) {
-        // TODO: repository.findByCode(shortCode), increment clicks, or throw
+
         ShortUrl found = repository.findByCode(shortCode)
                 .orElseThrow(() -> new ShortCodeNotFoundException("No mapping for code: " + shortCode));
         repository.incrementClicks(shortCode);

@@ -1,5 +1,6 @@
 package app;
 
+import controller.JsonConfig;
 import controller.UrlController;
 import encoder.Base62Encoder;
 import io.javalin.Javalin;
@@ -21,7 +22,7 @@ public class Main {
         ShortenerService service = new ShortenerService(repository, validator, encoder);
         UrlController controller = new UrlController(service);
 
-        Javalin app = Javalin.create();
+        Javalin app = Javalin.create(config -> config.jsonMapper(JsonConfig.mapper()));
         controller.registerRoutes(app);
         app.start("localhost",7000);
     }

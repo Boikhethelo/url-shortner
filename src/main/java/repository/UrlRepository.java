@@ -36,6 +36,12 @@ public interface UrlRepository {
 
     void incrementClicks(String shortCode);
 
+    /**
+     * Sets the short code for an already-persisted row (used once the
+     * generated id is known, to avoid inserting twice).
+     */
+    void updateShortCode(long id, String shortCode);
+
 
 
 
