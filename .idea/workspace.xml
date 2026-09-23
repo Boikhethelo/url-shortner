@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9869d2b3-d985-4f25-be30-f6e8aadfec4a" name="Changes" comment="" />
+    <list default="true" id="9869d2b3-d985-4f25-be30-f6e8aadfec4a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/CI.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dockerfile" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -20,6 +30,9 @@
   "keyToString": {
     "JUnit.Base62EncoderTest.executor": "Run",
     "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/boikhethelolehata/nimbus-stream",
+    "node.js.detected.package.jshint": "true",
+    "node.js.selected.package.jshint": "",
     "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>
@@ -44,6 +57,14 @@
         <item itemvalue="JUnit.Base62EncoderTest" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-34e2839f716b-intellij.indexing.shared.core-IU-262.9437.185" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.9437.185" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="TaskManager">
     <servers />
